@@ -1,10 +1,12 @@
 ﻿using FeiraConnect.Model;
 using FeiraConnect.Service;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeiraConnect.Controller
 {
+    [Authorize]
     [Route("~/produtos")]
     [ApiController]
     public class FeiraController : ControllerBase

@@ -1,6 +1,8 @@
 
 using FeiraConnect.Data;
 using FeiraConnect.Model;
+using FeiraConnect.Service;
+using FeiraConnect.Service.Implements;
 using FeiraConnect.Validator;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,8 @@ namespace FeiraConnect
 
             
             builder.Services.AddTransient<IValidator<Feira>, FeiraValidator>();
+            
+            builder.Services.AddScoped<IFeiraService, FeiraService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

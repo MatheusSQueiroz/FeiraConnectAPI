@@ -22,7 +22,7 @@ namespace FeiraConnect.Model
 
         [Column(TypeName = "date")]
         [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateTime DataLancamento { get; set; }
+        public DateTime Data { get; set; }
 
     }
 }

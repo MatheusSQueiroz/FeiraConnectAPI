@@ -1,39 +1,71 @@
-﻿using FeiraConnect.Model;
+﻿using FeiraConnect.Data;
+using FeiraConnect.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeiraConnect.Service.Implements
 {
     public class FeiraService : IFeiraService
     {
-        public FeiraService()
+        private readonly AppDbContext _context;
+        public FeiraService(AppDbContext context)
         {
+            _context = context;
         }
-        public Task<IEnumerable<Feira>> GetAll()
+        public async Task<IEnumerable<Feira>> GetAll()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Feira?> GetById(long id)
-        {
-            throw new NotImplementedException();
+            return await _context.Feiras.ToListAsync();
         }
 
-        public Task<IEnumerable<Feira>> GetByNome(string nome)
+        public async Task<Feira?> GetById(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var Feira = await _context.Feiras
+                    .FirstAsync(i => i.Id == id);
+
+                return Feira;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public Task<Feira?> Create(Feira feira)
+        public async Task<IEnumerable<Feira>> GetByNome(string nome)
         {
-            throw new NotImplementedException();
-        }
-        public Task<Feira?> Update(Feira feira)
-        {
-            throw new NotImplementedException();
+            var Feira = await _context.Feiras
+                .Where(p => p.Nome.Contains(nome))
+                .ToListAsync();
+
+            return Feira;
         }
 
-        public Task Delete(Feira feira)
+        public async Task<Feira?> Create(Feira feira)
         {
-            throw new NotImplementedException();
+            await _context.Feiras.AddAsync(feira);
+            await _context.SaveChangesAsync();
+
+            return feira;
+        }
+        public async Task<Feira?> Update(Feira feira)
+        {
+            var FeiraUpdate = await _context.Feiras.FindAsync(feira.Id);
+
+            if (FeiraUpdate is null)
+                return null;
+
+            _context.Entry(FeiraUpdate).State = EntityState.Detached;
+            _context.Entry(feira).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return feira;
+
+        }
+
+        public async Task Delete(Feira feira)
+        {
+            _context.Feiras.Remove(feira);
+            await _context.SaveChangesAsync();
         }
 
     }

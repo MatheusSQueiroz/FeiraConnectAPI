@@ -30,6 +30,7 @@ namespace FeiraConnect
             builder.Services.AddTransient<IValidator<User>, UserValidator>();
 
             builder.Services.AddScoped<IFeiraService, FeiraService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

@@ -1,4 +1,7 @@
 
+using FeiraConnect.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace FeiraConnect
 {
     public class Program
@@ -9,6 +12,14 @@ namespace FeiraConnect
 
 
             builder.Services.AddControllers();
+
+            var connectionString = builder.Configuration.
+                    GetConnectionString("DefaultConnection");
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -23,6 +34,15 @@ namespace FeiraConnect
             });
 
             var app = builder.Build();
+
+            
+            using (var scope = app.Services.CreateAsyncScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.EnsureCreated();
+            }
+
+            app.UseDeveloperExceptionPage();
 
             if (app.Environment.IsDevelopment())
             {

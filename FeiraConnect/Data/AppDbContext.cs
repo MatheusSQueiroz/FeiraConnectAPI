@@ -11,9 +11,11 @@ namespace FeiraConnect.Data
         {
 
             modelBuilder.Entity<Feira>().ToTable("tb_feira");
+            modelBuilder.Entity<User>().ToTable("tb_usuarios");
 
         }
 
         public DbSet<Feira> Feiras { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
     }
 }
